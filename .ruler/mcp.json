@@ -1,0 +1,26 @@
+{
+    "mcpServers": {
+        "sequential-thinking": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-sequential-thinking"
+            ]
+        },
+        "memory": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-memory"
+            ]
+        },
+        "language-server": {
+            "command": "mcp-language-server",
+            "args": ["--workspace", ".", "--lsp", "pyright-langserver", "--", "--stdio"]
+        },
+        "mcp-file-lens": {
+            "command": "python",
+            "args": ["-m", "mcp_file_lens", "--allowed-dir", "."]
+        }
+    }
+}
