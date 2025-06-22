@@ -2,13 +2,9 @@
 
 from __future__ import annotations
 
-import tempfile
 from pathlib import Path
-from typing import Any
 
-import pytest
-
-from mcp_file_lens import server, security
+from mcp_file_lens import security, server
 
 
 def get_function(tool):
@@ -189,7 +185,7 @@ line 5"""
 
         assert "Error:" not in result
         assert "2:line 2" in result
-        assert "3:match line" in result 
+        assert "3:match line" in result
         assert "4:line 4" in result
 
     def test_grep_no_matches(self, tmp_path: Path) -> None:

@@ -111,5 +111,5 @@ class TestAuditHook:
             tf.write(b"test")
             tf.flush()
             # This should work fine
-            with open(tf.name, 'r') as f:
+            with open(tf.name) as f:
                 assert f.read() == "test"
