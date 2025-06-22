@@ -46,9 +46,6 @@ cd mcp-file-lens
 
 # Install with pip (recommended)
 pip install -e .
-
-# Or install with uv
-uv pip install -e .
 ```
 
 ## Usage
@@ -130,7 +127,7 @@ This allows LLMs to:
 
 ## Tool APIs
 
-### `list_dir(path: str = ".", recursive: bool = False)` 
+### `list_dir(path: str = ".", recursive: bool = False)`
 Lists the contents of a directory in ls -la format. Automatically filters out gitignored files and binary files.
 
 **Parameters:**
@@ -161,7 +158,7 @@ Reads the complete contents of a file in cat -n format. Automatically skips bina
 ```
      1	#!/usr/bin/env python3
      2	"""Main module"""
-     3	
+     3
      4	import sys
 ```
 
@@ -307,7 +304,7 @@ mcp-file-lens/
 The `--allowed-dir` argument implements targeted security through a filesystem adapter:
 
 1. **Path Validation**: Every MCP tool operation validates paths through a secure filesystem adapter
-2. **No Traversal**: Prevents `../` and other directory traversal attempts  
+2. **No Traversal**: Prevents `../` and other directory traversal attempts
 3. **Targeted Scope**: Security only applies to MCP file operations, not Python imports or library loading
 4. **Absolute Resolution**: All paths are resolved to absolute paths before validation
 
