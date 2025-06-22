@@ -30,14 +30,14 @@ Security:
 Examples:
   python -m mcp_file_lens --allowed-dir ./my_project
   python -m mcp_file_lens --allowed-dir /absolute/path/to/project
-        """
+        """,
     )
 
     parser.add_argument(
         "--allowed-dir",
         type=str,
         required=True,
-        help="Directory to allow file access (relative to current directory)"
+        help="Directory to allow file access (relative to current directory)",
     )
 
     gitignore_group = parser.add_mutually_exclusive_group()
@@ -45,32 +45,29 @@ Examples:
         "--enable-gitignore",
         action="store_true",
         default=True,
-        help="Enable gitignore filtering (default)"
+        help="Enable gitignore filtering (default)",
     )
     gitignore_group.add_argument(
-        "--disable-gitignore",
-        action="store_true",
-        help="Disable gitignore filtering"
+        "--disable-gitignore", action="store_true", help="Disable gitignore filtering"
     )
 
-    parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="Enable debug logging"
-    )
+    parser.add_argument("--debug", action="store_true", help="Enable debug logging")
 
     args = parser.parse_args()
 
     # Configure logging based on debug flag
     if args.debug:
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        )
     else:
         # Suppress ALL logging including from FastMCP
         logging.basicConfig(level=logging.CRITICAL)
         # Disable specific loggers that might still output
-        logging.getLogger('FastMCP').setLevel(logging.CRITICAL)
-        logging.getLogger('fastmcp').setLevel(logging.CRITICAL)
-        logging.getLogger('mcp').setLevel(logging.CRITICAL)
+        logging.getLogger("FastMCP").setLevel(logging.CRITICAL)
+        logging.getLogger("fastmcp").setLevel(logging.CRITICAL)
+        logging.getLogger("mcp").setLevel(logging.CRITICAL)
         # Disable root logger to be safe
         logging.getLogger().setLevel(logging.CRITICAL)
 
@@ -97,7 +94,9 @@ Examples:
             # Resolve and log the actual allowed path
             allowed_path = Path(args.allowed_dir).resolve()
             logger.debug(f"File access restricted to: {allowed_path}")
-            logger.debug(f"Gitignore filtering: {'enabled' if gitignore_enabled else 'disabled'}")
+            logger.debug(
+                f"Gitignore filtering: {'enabled' if gitignore_enabled else 'disabled'}"
+            )
             logger.debug("Starting MCP File Lens server...")
         server = create_server()
         server.run()
@@ -117,4 +116,3 @@ Examples:
 
 if __name__ == "__main__":
     main()
-

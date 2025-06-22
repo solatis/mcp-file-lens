@@ -9,7 +9,7 @@ from mcp_file_lens import security, server
 
 def get_function(tool):
     """Extract the actual function from a FastMCP tool wrapper."""
-    return tool.fn if hasattr(tool, 'fn') else tool
+    return tool.fn if hasattr(tool, "fn") else tool
 
 
 class TestListDirectory:
@@ -248,7 +248,9 @@ class TestReadFileRange:
         test_file.write_text("\n".join(lines))
 
         security.set_allowed_directory(str(tmp_path))
-        result = get_function(server.read_file_range)(str(test_file), 2, 4, lineno=False)
+        result = get_function(server.read_file_range)(
+            str(test_file), 2, 4, lineno=False
+        )
 
         assert "Error:" not in result
         assert "Line 2" in result

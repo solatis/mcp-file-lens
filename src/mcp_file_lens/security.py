@@ -88,11 +88,11 @@ def _load_gitignore_patterns() -> list[str]:
 
     try:
         patterns = []
-        with open(gitignore_path, encoding='utf-8') as f:
+        with open(gitignore_path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 # Skip empty lines and comments
-                if line and not line.startswith('#'):
+                if line and not line.startswith("#"):
                     patterns.append(line)
         return patterns
     except Exception:
@@ -115,7 +115,7 @@ def _is_gitignored(path: str | Path) -> bool:
         # Get relative path from allowed directory
         path_obj = Path(path).resolve()
         rel_path = path_obj.relative_to(_allowed_dir)
-        path_str = str(rel_path).replace('\\', '/')  # Normalize path separators
+        path_str = str(rel_path).replace("\\", "/")  # Normalize path separators
 
         for pattern in _gitignore_patterns:
             # Simple gitignore pattern matching (not full spec, but covers most cases)
@@ -137,17 +137,17 @@ def _matches_gitignore_pattern(path: str, pattern: str) -> bool:
         True if path matches pattern
     """
     # Handle directory patterns (ending with /)
-    if pattern.endswith('/'):
+    if pattern.endswith("/"):
         pattern = pattern[:-1]
         # Check if any parent directory matches
-        parts = path.split('/')
+        parts = path.split("/")
         for i in range(len(parts)):
-            if _simple_pattern_match('/'.join(parts[:i+1]), pattern):
+            if _simple_pattern_match("/".join(parts[: i + 1]), pattern):
                 return True
         return False
 
     # Handle patterns starting with /
-    if pattern.startswith('/'):
+    if pattern.startswith("/"):
         pattern = pattern[1:]
         return _simple_pattern_match(path, pattern)
 
@@ -156,9 +156,9 @@ def _matches_gitignore_pattern(path: str, pattern: str) -> bool:
         return True
 
     # Check against path components
-    parts = path.split('/')
+    parts = path.split("/")
     for i in range(len(parts)):
-        if _simple_pattern_match('/'.join(parts[i:]), pattern):
+        if _simple_pattern_match("/".join(parts[i:]), pattern):
             return True
         if _simple_pattern_match(parts[i], pattern):
             return True
@@ -177,9 +177,9 @@ def _simple_pattern_match(text: str, pattern: str) -> bool:
         True if text matches pattern
     """
     # Convert gitignore pattern to regex
-    regex_pattern = pattern.replace('.', '\\.')
-    regex_pattern = regex_pattern.replace('*', '[^/]*')
-    regex_pattern = '^' + regex_pattern + '$'
+    regex_pattern = pattern.replace(".", "\\.")
+    regex_pattern = regex_pattern.replace("*", "[^/]*")
+    regex_pattern = "^" + regex_pattern + "$"
 
     try:
         return bool(re.match(regex_pattern, text))
@@ -197,17 +197,19 @@ def _is_binary_file(path: str | Path) -> bool:
         True if file appears to be binary, False otherwise
     """
     try:
-        with open(path, 'rb') as f:
+        with open(path, "rb") as f:
             chunk = f.read(1024)  # Read first 1KB
             if not chunk:
                 return False
 
             # Check for null bytes (common in binary files)
-            if b'\x00' in chunk:
+            if b"\x00" in chunk:
                 return True
 
             # Check percentage of non-text characters
-            non_text_chars = sum(1 for byte in chunk if byte < 32 and byte not in (9, 10, 13))
+            non_text_chars = sum(
+                1 for byte in chunk if byte < 32 and byte not in (9, 10, 13)
+            )
             return bool(len(chunk) > 0 and non_text_chars / len(chunk) > 0.3)
     except (OSError, PermissionError):
         return True  # Assume binary if we can't read it
@@ -287,9 +289,11 @@ class SecureFileSystem:
         except UnicodeDecodeError:
             # Try with error handling for problematic files
             try:
-                return file_path.read_text(encoding=encoding, errors='replace')
+                return file_path.read_text(encoding=encoding, errors="replace")
             except Exception as e:
-                raise PermissionError(f"Cannot decode file as {encoding}: {path}") from e
+                raise PermissionError(
+                    f"Cannot decode file as {encoding}: {path}"
+                ) from e
 
     def stat(self, path: str | Path) -> os.stat_result:
         """This function gets file statistics with security validation.
@@ -343,7 +347,7 @@ class SecureFileSystem:
 
         return items
 
-    def rglob(self, path: str | Path, pattern: str = '*') -> list[Path]:
+    def rglob(self, path: str | Path, pattern: str = "*") -> list[Path]:
         """This function recursively globs files with security validation.
 
         It requires: a valid directory path within allowed directory

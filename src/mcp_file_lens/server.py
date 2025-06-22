@@ -14,7 +14,9 @@ logger = logging.getLogger(__name__)
 mcp: FastMCP[Any] = FastMCP("mcp-file-lens")
 
 
-def _list_directory_recursive(dir_path: str, relative_to: Path | None = None) -> list[str]:
+def _list_directory_recursive(
+    dir_path: str, relative_to: Path | None = None
+) -> list[str]:
     """This function recursively lists all files and directories in a given path.
 
     It requires: a valid directory path string
@@ -176,8 +178,14 @@ def read_file(path: str, lineno: bool = True) -> str:
         return f"Error: {str(e)}"
 
 
-def _grep_file(file_path: str | Path, search_string: str, before: int = 0, after: int = 0,
-               lineno: bool = True, filename: bool = False) -> list[str]:
+def _grep_file(
+    file_path: str | Path,
+    search_string: str,
+    before: int = 0,
+    after: int = 0,
+    lineno: bool = True,
+    filename: bool = False,
+) -> list[str]:
     """This function searches for a string in a file and returns matching lines with context.
 
     It requires: a valid file path and search string
@@ -219,7 +227,11 @@ def _grep_file(file_path: str | Path, search_string: str, before: int = 0, after
             end_idx = min(len(lines), match_idx + after + 1)
 
             # Add separator if there's a gap from previous group
-            if result_lines and included_indices and min(range(start_idx, end_idx)) > max(included_indices) + 1:
+            if (
+                result_lines
+                and included_indices
+                and min(range(start_idx, end_idx)) > max(included_indices) + 1
+            ):
                 result_lines.append("--")
 
             # Add lines in range
@@ -232,7 +244,11 @@ def _grep_file(file_path: str | Path, search_string: str, before: int = 0, after
                     if filename:
                         # Use relative path from current working directory
                         try:
-                            file_path_obj = Path(file_path) if isinstance(file_path, str) else file_path
+                            file_path_obj = (
+                                Path(file_path)
+                                if isinstance(file_path, str)
+                                else file_path
+                            )
                             rel_path = file_path_obj.relative_to(Path.cwd())
                             prefix_parts.append(str(rel_path))
                         except ValueError:
@@ -259,8 +275,14 @@ def _grep_file(file_path: str | Path, search_string: str, before: int = 0, after
 
 
 @mcp.tool()
-def read_file_grep(path: str, search_string: str, before: int = 0, after: int = 0,
-                   context: int | None = None, lineno: bool = True) -> str:
+def read_file_grep(
+    path: str,
+    search_string: str,
+    before: int = 0,
+    after: int = 0,
+    context: int | None = None,
+    lineno: bool = True,
+) -> str:
     """Search file for specific strings WITH context - ideal for finding and understanding code sections with MINIMAL noise.
 
     PURPOSE: Extract only relevant lines from files, preserving context window for important analysis.
@@ -306,7 +328,9 @@ def read_file_grep(path: str, search_string: str, before: int = 0, after: int = 
         if context is not None:
             before = after = context
 
-        result_lines = _grep_file(path, search_string, before, after, lineno, filename=False)
+        result_lines = _grep_file(
+            path, search_string, before, after, lineno, filename=False
+        )
 
         if not result_lines:
             return f"No matches found for '{search_string}' in {path}"
@@ -322,8 +346,15 @@ def read_file_grep(path: str, search_string: str, before: int = 0, after: int = 
 
 
 @mcp.tool()
-def read_files_grep(path: str = ".", search_string: str = "", before: int = 0, after: int = 0,
-                    context: int | None = None, lineno: bool = True, filename: bool = True) -> str:
+def read_files_grep(
+    path: str = ".",
+    search_string: str = "",
+    before: int = 0,
+    after: int = 0,
+    context: int | None = None,
+    lineno: bool = True,
+    filename: bool = True,
+) -> str:
     """Search recursively through all files in a directory for specific strings WITH context.
 
     PURPOSE: Find patterns across multiple files in a directory tree, combining list_dir and read_file_grep functionality.
@@ -380,10 +411,14 @@ def read_files_grep(path: str = ".", search_string: str = "", before: int = 0, a
                 if fs.is_file(file_path):
                     file_count += 1
 
-                    result_lines = _grep_file(file_path, search_string, before, after, lineno, filename)
+                    result_lines = _grep_file(
+                        file_path, search_string, before, after, lineno, filename
+                    )
 
                     if result_lines:
-                        match_count += len([line for line in result_lines if search_string in line])
+                        match_count += len(
+                            [line for line in result_lines if search_string in line]
+                        )
                         all_results.extend(result_lines)
                         if len(all_results) > 0 and all_results[-1] != "--":
                             all_results.append("--")  # Separator between files
@@ -410,7 +445,9 @@ def read_files_grep(path: str = ".", search_string: str = "", before: int = 0, a
 
 
 @mcp.tool()
-def read_file_range(path: str, start_line: int, end_line: int, lineno: bool = True) -> str:
+def read_file_range(
+    path: str, start_line: int, end_line: int, lineno: bool = True
+) -> str:
     """Extract SPECIFIC line range from files - perfect for examining error locations or specific functions.
 
     PURPOSE: Read only a specific line range, ideal for focusing on error locations or particular code sections.
