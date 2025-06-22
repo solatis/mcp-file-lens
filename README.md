@@ -1,5 +1,9 @@
 # mcp-file-lens
 
+[![PyPI version](https://badge.fury.io/py/mcp-file-lens.svg)](https://pypi.org/project/mcp-file-lens/)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 An MCP (Model Context Protocol) server that provides a flexible "lens" into your directory structure and files, enabling LLM clients to efficiently navigate and understand codebases with minimal noise.
 
 ## Overview
@@ -39,13 +43,23 @@ This server is designed to work alongside other MCP servers like Language Protoc
 
 ## Installation
 
+### From PyPI (Recommended)
+
+```bash
+pip install mcp-file-lens
+```
+
+> **Note**: The package name uses hyphens (`mcp-file-lens`) for PyPI installation, but the Python module name uses underscores (`mcp_file_lens`) for imports.
+
+### From Source
+
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/mcp-file-lens.git
+git clone https://github.com/solatis/mcp-file-lens.git
 cd mcp-file-lens
 
-# Install with pip (recommended)
-pip install -e .
+# Install in development mode
+pip install -e ".[dev]"
 ```
 
 ## Usage
@@ -240,17 +254,22 @@ read_file_range("/path/to/file.py", 10, 20)
 ### Setup Development Environment
 
 ```bash
-# Install development dependencies
+# Clone and install in development mode
+git clone https://github.com/solatis/mcp-file-lens.git
+cd mcp-file-lens
 pip install -e ".[dev]"
 
 # Run tests
 pytest
 
-# Type checking
-mypy src/
+# Code quality checks
+ruff check .        # Linting
+black --check .     # Format checking
+mypy src/           # Type checking
 
-# Linting
-ruff check src/
+# Auto-fix formatting
+black .             # Format code
+ruff check --fix .  # Fix linting issues
 ```
 
 ### Project Structure
